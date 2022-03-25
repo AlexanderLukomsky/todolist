@@ -1,11 +1,9 @@
-import { Container, Grid, Paper } from '@material-ui/core';
 import React, { useState } from 'react';
 import { v1 } from 'uuid';
 import './App.scss';
 import { AddItemForm } from './components/AddItemForm/AddItemForm';
-import ButtonAppBar from './components/ButtonAppBar/ButtonAppBar';
 import { Header } from './components/Header/Header';
-import { TodolistType, Todolist, TasksType, FilterValueType } from './components/Todolist/Todolist';
+import { TodolistType, Todolist, FilterValueType } from './components/Todolist/Todolist';
 const App = () => {
     const todoListID1 = v1()
     const todoListID2 = v1()
@@ -63,39 +61,27 @@ const App = () => {
     }
     return (
 
-        <div >
-            <ButtonAppBar />
-            {/* <Header title='Header' /> */}
-            <Container fixed>
-                <Grid container style={{ padding: '30px' }}>
-                    <AddItemForm callback={addTodolist} />
-                </Grid>
-                <Grid container spacing={3}>
-                    {
-                        todolist.map(t =>
-                            <Grid item>
-                                <Paper style={{ padding: '10px' }} elevation={6}>
-                                    <Todolist
-                                        key={t.id}
-                                        todolistID={t.id}
-                                        title={t.title}
-                                        tasks={tasks[t.id]}
-                                        filterValue={t.filter}
-                                        deleteTasks={deleteTasks}
-                                        addTask={addTask}
-                                        changeStatus={changeStatus}
-                                        changheFilter={changheFilter}
-                                        removeTodolist={removeTodolist}
-                                        editTaskTitle={editTaskTitle}
-                                        editTodolistTitle={editTodolistTitle}
-
-                                    />
-                                </Paper>
-                            </Grid>
-                        )
-                    }
-                </Grid>
-            </Container>
+        <div>
+            <Header title='Header' />
+            <AddItemForm callback={addTodolist} />
+            {
+                todolist.map(t =>
+                    <Todolist
+                        key={t.id}
+                        todolistID={t.id}
+                        title={t.title}
+                        tasks={tasks[t.id]}
+                        filterValue={t.filter}
+                        deleteTasks={deleteTasks}
+                        addTask={addTask}
+                        changeStatus={changeStatus}
+                        changheFilter={changheFilter}
+                        removeTodolist={removeTodolist}
+                        editTaskTitle={editTaskTitle}
+                        editTodolistTitle={editTodolistTitle}
+                    />
+                )
+            }
         </div>
     )
 }

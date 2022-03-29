@@ -1,13 +1,10 @@
 import { AddItemForm } from "../AddItemForm/AddItemForm"
 import { Checkbox } from "../Checkbox/Checkbox"
 import { EditableSpan } from "../EditebleSpan/EditeblaSpan"
+import { FilterValueType } from "../state/todolist-reducer"
 import style from './Todolist.module.scss'
-export type FilterValueType = 'all' | 'active' | 'completed'
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValueType
-}
+
+
 export type TasksType = {
     id: string
     title: string

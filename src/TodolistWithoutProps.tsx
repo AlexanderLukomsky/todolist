@@ -14,15 +14,15 @@ export type TasksType = {
 }
 type TodolistPropstType = {
     todolist: TodolistType
+    tasks: TasksType[]
 }
 export const TodolistWithoutProps = (props: TodolistPropstType) => {
     const dispatch = useDispatch()
-    const tasks = useSelector<AppRootStoreType, TasksType[]>(state => state.tasks[props.todolist.id])
     const filteredTasks = (filter: FilterValueType) => {
         switch (filter) {
-            case 'completed': return tasks.filter(t => t.isDone === true)
-            case 'active': return tasks.filter(t => t.isDone === false)
-            default: return tasks
+            case 'completed': return props.tasks.filter(t => t.isDone === true)
+            case 'active': return props.tasks.filter(t => t.isDone === false)
+            default: return props.tasks
         }
     }
     const onChangeStatusHandler = (todolistId: string, taskId: string, isDone: boolean) => { dispatch(changeTaskStatusAC(todolistId, taskId, isDone)) }

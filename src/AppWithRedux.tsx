@@ -49,7 +49,7 @@ const AppWithRedux = () => {
         <div>
             <Header title='Header' />
             <AddItemForm callback={addTodolist} />
-            {todolist.map(t => <TodolistWithoutProps todolistID={t.id} />)}
+            {todolist.map(t => <TodolistWithoutProps key={t.id} todolist={t} />)}
             {/* {
                 todolist.map(t =>
                     <Todolist

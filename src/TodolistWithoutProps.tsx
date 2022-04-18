@@ -17,7 +17,6 @@ type TodolistPropstType = {
 }
 export const TodolistWithoutProps = (props: TodolistPropstType) => {
     const dispatch = useDispatch()
-    const todolist = useSelector<AppRootStoreType, TodolistType>(state => state.todolist.filter(t => t.id === props.todolist.id)[0])
     const tasks = useSelector<AppRootStoreType, TasksType[]>(state => state.tasks[props.todolist.id])
     const filteredTasks = (filter: FilterValueType) => {
         switch (filter) {
@@ -46,7 +45,7 @@ export const TodolistWithoutProps = (props: TodolistPropstType) => {
     return (
         <div>
             <h3>
-                <EditableSpan title={todolist.title} callback={editTodolistTitleHandler} />
+                <EditableSpan title={props.todolist.title} callback={editTodolistTitleHandler} />
                 <button onClick={() => { removeTodolist(props.todolist.id) }}>X</button>
             </h3>
             <AddItemForm callback={addTaskHandler} />

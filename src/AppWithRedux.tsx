@@ -8,6 +8,7 @@ import { Todolist, TasksType } from './components/Todolist/Todolist';
 import { addTaskAC, changeTaskStatusAC, editTaskTitleAC, removeTaskAC, tasksReducer } from './reducers/tasksReducer/tasksReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppRootStoreType } from './reducers/store';
+import { TodolistWithoutProps } from './TodolistWithoutProps';
 export type TasksStateType = {
     [key: string]: TasksType[]
 }
@@ -48,7 +49,8 @@ const AppWithRedux = () => {
         <div>
             <Header title='Header' />
             <AddItemForm callback={addTodolist} />
-            {
+            {todolist.map(t => <TodolistWithoutProps todolistID={t.id} />)}
+            {/* {
                 todolist.map(t =>
                     <Todolist
                         key={t.id}
@@ -65,7 +67,7 @@ const AppWithRedux = () => {
                         editTodolistTitle={editTodolistTitle}
                     />
                 )
-            }
+            } */}
         </div>
     )
 }

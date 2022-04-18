@@ -1,8 +1,8 @@
 import { v1 } from "uuid"
 
 export type FilterValueType = 'all' | 'active' | 'completed'
-type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
-type AddTodolistACType = ReturnType<typeof addTodolistAC>
+export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
+export type AddTodolistACType = ReturnType<typeof addTodolistAC>
 type ChangeTodolisTitletACType = ReturnType<typeof changeTodolisTitletAC>
 type ChangeTodolisFilterACType = ReturnType<typeof changeTodolisFilterAC>
 export type TodolistType = {
@@ -11,10 +11,10 @@ export type TodolistType = {
     filter: FilterValueType
 }
 type ActionType = RemoveTodolistACType | AddTodolistACType | ChangeTodolisTitletACType | ChangeTodolisFilterACType
-export const todolistReducer = (state: TodolistType[], action: ActionType): TodolistType[] => {
+export const todolistReducer = (state: TodolistType[] = [], action: ActionType): TodolistType[] => {
     switch (action.type) {
         case 'REMOVE-TODOLIST': return state.filter(el => el.id !== action.payload.todolistID)
-        case 'ADD-TODOLIST': return [...state, { id: action.payload.todolistID, title: action.payload.title, filter: 'all' }]
+        case 'ADD-TODOLIST': return [{ id: action.todolistID, title: action.payload.title, filter: 'all' }, ...state]
         case 'CHANGE-TODOLIST-TITLE': return state.map(el => el.id === action.payload.todolistID ? { ...el, ...action.payload } : el)
         case 'CHANGE-TODOLIST-FILTER': return state.map(el => el.id === action.payload.todolistID ? { ...el, filter: action.payload.filter } : el)
         default: return state
@@ -26,10 +26,11 @@ export const removeTodolistAC = (todolistID: string) => {
         payload: { todolistID }
     } as const
 }
-export const addTodolistAC = (todolistID: string, title: string) => {
+export const addTodolistAC = (title: string) => {
     return {
         type: 'ADD-TODOLIST',
-        payload: { todolistID, title }
+        todolistID: v1(),
+        payload: { title }
     } as const
 }
 export const changeTodolisTitletAC = (todolistID: string, title: string) => {

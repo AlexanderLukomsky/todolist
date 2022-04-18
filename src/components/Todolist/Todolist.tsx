@@ -1,7 +1,7 @@
 import { AddItemForm } from "../AddItemForm/AddItemForm"
 import { Checkbox } from "../Checkbox/Checkbox"
 import { EditableSpan } from "../EditebleSpan/EditeblaSpan"
-import { FilterValueType } from "../state/todolist-reducer"
+import { FilterValueType } from "../../reducers/todolistReducer/todolist-reducer"
 import style from './Todolist.module.scss'
 
 

@@ -1,9 +1,10 @@
+import React from "react"
 import { KeyboardEvent, ChangeEvent, useState } from "react"
 import style from '../Todolist/Todolist.module.scss'
-type AddItemFormType = {
+export type AddItemFormType = {
     callback: (title: string) => void
 }
-export const AddItemForm = (props: AddItemFormType) => {
+export const AddItemForm = React.memo((props: AddItemFormType) => {
     const [errorStyle, setErrorStyle] = useState<string | null>(null)
     const [titleValue, setTitleValue] = useState('')
     const onClickHandler = () => {
@@ -17,7 +18,7 @@ export const AddItemForm = (props: AddItemFormType) => {
     }
     const onChangeInputHandler = (e: ChangeEvent<HTMLInputElement>) => { setTitleValue(e.currentTarget.value) }
     const inputOnKeyPressHanler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setErrorStyle(null)
+        if (errorStyle) setErrorStyle(null)
         e.key === 'Enter' && onClickHandler()
     }
     return (
@@ -27,4 +28,4 @@ export const AddItemForm = (props: AddItemFormType) => {
             {errorStyle && <div className={style.error_message}>{errorStyle}</div>}
         </div>
     )
-}
+})

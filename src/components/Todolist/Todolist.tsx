@@ -1,8 +1,11 @@
 import { AddItemForm } from "../AddItemForm/AddItemForm"
 import { Checkbox } from "../Checkbox/Checkbox"
-import { EditableSpan } from "../EditebleSpan/EditeblaSpan"
+import { EditableSpan } from "../EditebleSpan/EditebleSpan"
 import { FilterValueType } from "../../reducers/todolistReducer/todolist-reducer"
 import style from './Todolist.module.scss'
+import { useCallback } from "react"
+import React from "react"
+import { Task } from "../Task/Task"
 
 
 export type TasksType = {
@@ -23,7 +26,9 @@ type TodolistPropstType = {
     editTaskTitle: (todolistID: string, taskID: string, title: string) => void
     editTodolistTitle: (todolistID: string, title: string) => void
 }
-export const Todolist = ({ title, tasks, removeTodolist, ...props }: TodolistPropstType) => {
+export const Todolist = React.memo(({ title, tasks, removeTodolist, addTask, ...props }: TodolistPropstType) => {
+    //   debugger
+    console.log('Todolist');
     const filteredTasks = (filter: FilterValueType) => {
         switch (filter) {
             case 'completed': return tasks.filter(t => t.isDone === true)
@@ -36,9 +41,9 @@ export const Todolist = ({ title, tasks, removeTodolist, ...props }: TodolistPro
         props.changheFilter(props.todolistID, filter)
     }
     const removeTask = (todolistId: string, taskID: string) => { props.deleteTasks(todolistId, taskID) }
-    const addTaskHandler = (title: string) => {
-        props.addTask(props.todolistID, title)
-    }
+    const addTaskHandler = useCallback((title: string) => {
+        addTask(props.todolistID, title)
+    }, [addTask, props.todolistID])
     const editTaskTitleHandler = (taskID: string, title: string) => {
         props.editTaskTitle(props.todolistID, taskID, title)
     }
@@ -48,17 +53,18 @@ export const Todolist = ({ title, tasks, removeTodolist, ...props }: TodolistPro
     return (
         <div>
             <h3>
-                <EditableSpan title={title} callback={editTodolistTitleHandler} />
+                <EditableSpan value={title} callback={editTodolistTitleHandler} />
                 <button onClick={() => { removeTodolist(props.todolistID) }}>X</button>
             </h3>
             <AddItemForm callback={addTaskHandler} />
             <ul>
                 {filteredTasks(props.filterValue).map(el =>
-                    <li key={el.id} style={el.isDone ? { opacity: '0.5' } : { opacity: '1' }}>
-                        <button onClick={() => { removeTask(props.todolistID, el.id) }}>x</button>
-                        <Checkbox callback={(checked) => { onChangeStatusHandler(props.todolistID, el.id, checked) }} isDone={el.isDone} tID={el.id} />
-                        <EditableSpan callback={(title: string) => { editTaskTitleHandler(el.id, title) }} title={el.title} />
-                    </li>
+                    <Task
+                        key={el.id}
+                        task={el} todolistID={props.todolistID}
+                        removeTask={removeTask} onChangeStatusHandler={onChangeStatusHandler}
+                        editTaskTitleHandler={editTaskTitleHandler}
+                    />
                 )}
             </ul>
             <div>
@@ -68,4 +74,4 @@ export const Todolist = ({ title, tasks, removeTodolist, ...props }: TodolistPro
             </div>
         </div>
     )
-}
+})

@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react"
 
 type EditableSpanType = {
-    title: string
+    value: string
     callback: (title: string) => void
 }
 export const EditableSpan = (props: EditableSpanType) => {
@@ -21,7 +21,7 @@ export const EditableSpan = (props: EditableSpanType) => {
     }
     return (
         !edit ?
-            <span onDoubleClick={onDoubleClick}>{props.title}</span> :
+            <span onDoubleClick={onDoubleClick}>{props.value}</span> :
             <input type="text" value={title}
                 onBlur={onBlurHandler}
                 onChange={onChangeHandler}

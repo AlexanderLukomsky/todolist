@@ -1,10 +1,9 @@
 import { AddItemForm } from "./components/AddItemForm/AddItemForm"
 import { Checkbox } from "./components/Checkbox/Checkbox"
-import { EditableSpan } from "./components/EditebleSpan/EditeblaSpan"
+import { EditableSpan } from "./components/EditebleSpan/EditebleSpan"
 import { changeTodolisFilterAC, changeTodolisTitletAC, FilterValueType, removeTodolistAC, TodolistType } from "./reducers/todolistReducer/todolist-reducer"
 import style from './components/Todolist/Todolist.module.scss'
-import { useDispatch, useSelector } from "react-redux"
-import { AppRootStoreType } from "./reducers/store"
+import { useDispatch } from "react-redux"
 import { addTaskAC, changeTaskStatusAC, editTaskTitleAC, removeTaskAC } from "./reducers/tasksReducer/tasksReducer"
 
 export type TasksType = {
@@ -45,7 +44,7 @@ export const TodolistWithoutProps = (props: TodolistPropstType) => {
     return (
         <div>
             <h3>
-                <EditableSpan title={props.todolist.title} callback={editTodolistTitleHandler} />
+                <EditableSpan value={props.todolist.title} callback={editTodolistTitleHandler} />
                 <button onClick={() => { removeTodolist(props.todolist.id) }}>X</button>
             </h3>
             <AddItemForm callback={addTaskHandler} />
@@ -54,7 +53,7 @@ export const TodolistWithoutProps = (props: TodolistPropstType) => {
                     <li key={el.id} style={el.isDone ? { opacity: '0.5' } : { opacity: '1' }}>
                         <button onClick={() => { removeTask(props.todolist.id, el.id) }}>x</button>
                         <Checkbox callback={(checked) => { onChangeStatusHandler(props.todolist.id, el.id, checked) }} isDone={el.isDone} tID={el.id} />
-                        <EditableSpan callback={(title: string) => { editTaskTitleHandler(props.todolist.id, el.id, title) }} title={el.title} />
+                        <EditableSpan callback={(title: string) => { editTaskTitleHandler(props.todolist.id, el.id, title) }} value={el.title} />
                     </li>
                 )}
             </ul>

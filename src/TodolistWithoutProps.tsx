@@ -1,10 +1,12 @@
 import { AddItemForm } from "./components/AddItemForm/AddItemForm"
 import { Checkbox } from "./components/Checkbox/Checkbox"
 import { EditableSpan } from "./components/EditebleSpan/EditebleSpan"
-import { changeTodolisFilterAC, changeTodolisTitletAC, FilterValueType, removeTodolistAC, TodolistType } from "./reducers/todolistReducer/todolist-reducer"
+import { changeTodolisFilterAC, changeTodolisTitletAC, removeTodolistAC } from "./reducers/todolistReducer/todolist-reducer"
 import style from './components/Todolist/Todolist.module.scss'
 import { useDispatch } from "react-redux"
-import { addTaskAC, changeTaskStatusAC, editTaskTitleAC, removeTaskAC } from "./reducers/tasksReducer/tasksReducer"
+import { addTaskAC, createTaskTC, removeTaskAC, updateTaskAC } from "./reducers/tasksReducer/tasksReducer"
+import { TaskStatuses } from "./types/tasksTypes"
+import { TodolistFilterType, TodolistWithFilterType } from "./types/todolistsTypes"
 
 export type TasksType = {
     id: string
@@ -12,34 +14,42 @@ export type TasksType = {
     isDone: boolean
 }
 type TodolistPropstType = {
-    todolist: TodolistType
+    todolist: TodolistWithFilterType
     tasks: TasksType[]
 }
-export const TodolistWithoutProps = (props: TodolistPropstType) => {
+const TodolistWithoutProps = (props: TodolistPropstType) => {
     const dispatch = useDispatch()
-    const filteredTasks = (filter: FilterValueType) => {
+    const filteredTasks = (filter: TodolistFilterType) => {
         switch (filter) {
             case 'completed': return props.tasks.filter(t => t.isDone === true)
             case 'active': return props.tasks.filter(t => t.isDone === false)
             default: return props.tasks
         }
     }
-    const onChangeStatusHandler = (todolistId: string, taskId: string, isDone: boolean) => { dispatch(changeTaskStatusAC(todolistId, taskId, isDone)) }
-    const onChangeFilterTasksHandler = (filter: FilterValueType) => {
+    const onChangeStatusHandler = (todolistId: string, taskId: string) => { dispatch(updateTaskAC(todolistId, taskId, { status: TaskStatuses.Completed })) }
+    const onChangeFilterTasksHandler = (filter: TodolistFilterType) => {
         dispatch(changeTodolisFilterAC(props.todolist.id, filter))
     }
     const removeTask = (todolistId: string, taskID: string) => { dispatch(removeTaskAC(todolistId, taskID)) }
     const addTaskHandler = (title: string) => {
-        dispatch(addTaskAC(props.todolist.id, title))
+        dispatch(createTaskTC(props.todolist.id, title))
     }
     const editTaskTitleHandler = (todolistID: string, taskID: string, title: string) => {
-        dispatch(editTaskTitleAC(todolistID, taskID, title))
+        dispatch(updateTaskAC(todolistID, taskID, { title }))
     }
     const editTodolistTitleHandler = (title: string) => {
         dispatch(changeTodolisTitletAC(props.todolist.id, title))
     }
     const removeTodolist = (todolistID: string) => {
         dispatch(removeTodolistAC(todolistID))
+    }
+
+    const taskStatus = (status: TaskStatuses) => {
+        switch (status) {
+            case TaskStatuses.Completed: return true
+            case TaskStatuses.NotCompleted: return false
+            default: return false
+        }
     }
     return (
         <div>
@@ -52,7 +62,7 @@ export const TodolistWithoutProps = (props: TodolistPropstType) => {
                 {filteredTasks(props.todolist.filter).map(el =>
                     <li key={el.id} style={el.isDone ? { opacity: '0.5' } : { opacity: '1' }}>
                         <button onClick={() => { removeTask(props.todolist.id, el.id) }}>x</button>
-                        <Checkbox callback={(checked) => { onChangeStatusHandler(props.todolist.id, el.id, checked) }} isDone={el.isDone} tID={el.id} />
+                        <Checkbox callback={() => { onChangeStatusHandler(props.todolist.id, el.id) }} status={el.isDone} tID={el.id} />
                         <EditableSpan callback={(title: string) => { editTaskTitleHandler(props.todolist.id, el.id, title) }} value={el.title} />
                     </li>
                 )}

@@ -6,7 +6,7 @@ type EditableSpanType = {
 }
 export const EditableSpan = (props: EditableSpanType) => {
     const [edit, setEdit] = useState<boolean>(false)
-    const [title, setTitle] = useState<string>('')
+    const [title, setTitle] = useState<string>(props.value)
     const onDoubleClick = () => {
         setEdit(!edit)
     }
@@ -21,7 +21,7 @@ export const EditableSpan = (props: EditableSpanType) => {
     }
     return (
         !edit ?
-            <span onDoubleClick={onDoubleClick}>{props.value}</span> :
+            <span onDoubleClick={onDoubleClick}>{title}</span> :
             <input type="text" value={title}
                 onBlur={onBlurHandler}
                 onChange={onChangeHandler}

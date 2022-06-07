@@ -17,22 +17,18 @@ export const TodolistApi = {
         }
 
     }),
-    getTodolist: () => {
+    getTodolists: () => {
         return TodolistApi._instance.get<TodolistType[]>('todo-lists')
             .then(response => response.data)
     },
     createTodolist: (title: string) => {
         return TodolistApi._instance.post<CommonResponseType<{ item: TodolistType }>>('todo-lists', { title })
-            .then(res => res)
     },
     deleteTodolist: (id: string) => {
         return TodolistApi._instance.delete<CommonResponseType>(`todo-lists/${id}`)
-            .then(res => res.data)
     },
-    UpdateTodolistTitle: (id: string, title: string) => {
-        debugger
+    changeTodolistTitle: (id: string, title: string) => {
         return TodolistApi._instance.put<CommonResponseType>(`todo-lists/${id}`, { title })
-            .then(res => res.data)
     }
 }
 

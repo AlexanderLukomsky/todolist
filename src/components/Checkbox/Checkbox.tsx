@@ -2,14 +2,14 @@ import { ChangeEvent } from "react"
 
 type CheckboxType = {
     callback: (checked: boolean) => void
-    isDone: boolean
+    status: boolean
     tID: string
 }
-export const Checkbox = ({ callback, isDone, ...props }: CheckboxType) => {
+export const Checkbox = ({ callback, status, ...props }: CheckboxType) => {
     const changeStatusHandler = (e: ChangeEvent<HTMLInputElement>) => { callback(e.currentTarget.checked) }
     return (
         <>
-            <input type="checkbox" checked={isDone} onChange={changeStatusHandler} />
+            <input type="checkbox" checked={status} onChange={changeStatusHandler} />
         </>
     )
 }

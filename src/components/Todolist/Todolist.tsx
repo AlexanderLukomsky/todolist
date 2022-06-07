@@ -1,43 +1,47 @@
 import { AddItemForm } from "../AddItemForm/AddItemForm"
-import { Checkbox } from "../Checkbox/Checkbox"
 import { EditableSpan } from "../EditebleSpan/EditebleSpan"
-import { FilterValueType } from "../../reducers/todolistReducer/todolist-reducer"
+
 import style from './Todolist.module.scss'
-import { useCallback } from "react"
+import { useCallback, useEffect } from "react"
 import React from "react"
 import { Task } from "../Task/Task"
+import { TaskStatuses, TaskType } from "../../types/tasksTypes"
+import { TodolistFilterType } from "../../types/todolistsTypes"
+import { useDispatch } from "react-redux"
+import { fetchTasksTC } from "../../reducers/tasksReducer/tasksReducer"
 
-
-export type TasksType = {
-    id: string
-    title: string
-    isDone: boolean
-}
 type TodolistPropstType = {
     deleteTasks: (todolistID: string, taskId: string) => void
     addTask: (todolistId: string, title: string) => void
     title: string
-    tasks: TasksType[]
-    changeStatus: (todolistId: string, taskId: string, isDone: boolean) => void
-    filterValue: FilterValueType
+    tasks: TaskType[]
+    changeStatus: (todolistId: string, taskId: string, status: TaskStatuses) => void
+    filterValue: TodolistFilterType
     todolistID: string
-    changheFilter: (todolistID: string, filter: FilterValueType) => void
+    changheFilter: (todolistID: string, filter: TodolistFilterType) => void
     removeTodolist: (todolistId: string) => void
     editTaskTitle: (todolistID: string, taskID: string, title: string) => void
     editTodolistTitle: (todolistID: string, title: string) => void
 }
 export const Todolist = React.memo(({ title, tasks, removeTodolist, addTask, ...props }: TodolistPropstType) => {
-    //   debugger
-    console.log('Todolist');
-    const filteredTasks = (filter: FilterValueType) => {
+    const dispatch = useDispatch()
+    useEffect(() => {
+        dispatch(fetchTasksTC(props.todolistID))
+    }, [])
+
+
+    const filteredTasks = (filter: TodolistFilterType) => {
         switch (filter) {
-            case 'completed': return tasks.filter(t => t.isDone === true)
-            case 'active': return tasks.filter(t => t.isDone === false)
+            case 'completed': return tasks.filter(t => t.status === TaskStatuses.Completed)
+            case 'active': return tasks.filter(t => t.status === TaskStatuses.NotCompleted)
             default: return tasks
         }
     }
-    const onChangeStatusHandler = (todolistId: string, taskId: string, isDone: boolean) => { props.changeStatus(todolistId, taskId, isDone) }
-    const onChangeFilterTasksHandler = (filter: FilterValueType) => {
+    const changeStatus = useCallback((todolistId: string, taskId: string, status: boolean) => {
+        const convertStatus = status ? TaskStatuses.Completed : TaskStatuses.NotCompleted
+        props.changeStatus(todolistId, taskId, convertStatus)
+    }, [])
+    const onChangeFilterTasksHandler = (filter: TodolistFilterType) => {
         props.changheFilter(props.todolistID, filter)
     }
     const removeTask = (todolistId: string, taskID: string) => { props.deleteTasks(todolistId, taskID) }
@@ -62,7 +66,7 @@ export const Todolist = React.memo(({ title, tasks, removeTodolist, addTask, ...
                     <Task
                         key={el.id}
                         task={el} todolistID={props.todolistID}
-                        removeTask={removeTask} onChangeStatusHandler={onChangeStatusHandler}
+                        removeTask={removeTask} changeStatus={changeStatus}
                         editTaskTitleHandler={editTaskTitleHandler}
                     />
                 )}

@@ -1,29 +1,23 @@
 import { TodolistApi } from './../../api/todolist-api';
 import { Dispatch } from "redux"
-import { v1 } from "uuid"
 import { TodolistFilterType, TodolistType, TodolistWithFilterType } from "../../types/todolistsTypes"
-
-
-export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
-export type AddTodolistACType = ReturnType<typeof addTodolistAC>
-export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
-type ActionType =
-    | RemoveTodolistACType
-    | AddTodolistACType
-    | SetTodolistsACType
-    | ReturnType<typeof changeTodolisTitletAC>
-    | ReturnType<typeof changeTodolisFilterAC>
-
+//reducer
 export const todolistReducer = (state: TodolistWithFilterType[] = [], action: ActionType): TodolistWithFilterType[] => {
     switch (action.type) {
-        case 'REMOVE-TODOLIST': return state.filter(el => el.id !== action.payload.todolistID)
-        case 'ADD-TODOLIST': return [{ ...action.payload.todolist, filter: 'all' }, ...state]
-        case 'CHANGE-TODOLIST-TITLE': return state.map(el => el.id === action.payload.todolistID ? { ...el, ...action.payload } : el)
-        case 'CHANGE-TODOLIST-FILTER': return state.map(el => el.id === action.payload.todolistID ? { ...el, filter: action.payload.filter } : el)
-        case 'SET-TODOLISTS': return action.payload.todolists.map(t => ({ ...t, filter: 'all' }))
+        case 'REMOVE-TODOLIST':
+            return state.filter(el => el.id !== action.payload.todolistID)
+        case 'ADD-TODOLIST':
+            return [{ ...action.payload.todolist, filter: 'all' }, ...state]
+        case 'CHANGE-TODOLIST-TITLE':
+            return state.map(el => el.id === action.payload.todolistID ? { ...el, title: action.payload.title } : el)
+        case 'CHANGE-TODOLIST-FILTER':
+            return state.map(el => el.id === action.payload.todolistID ? { ...el, filter: action.payload.filter } : el)
+        case 'SET-TODOLISTS':
+            return action.payload.todolists.map(t => ({ ...t, filter: 'all' }))
         default: return state
     }
 }
+//actions
 export const removeTodolistAC = (todolistID: string) => (
     {
         type: 'REMOVE-TODOLIST',
@@ -48,7 +42,6 @@ export const changeTodolisFilterAC = (todolistID: string, filter: TodolistFilter
         payload: { todolistID, filter }
     } as const
 )
-
 export const setTodolistsAC = (todolists: TodolistType[]) => (
     {
         type: 'SET-TODOLISTS',
@@ -57,27 +50,26 @@ export const setTodolistsAC = (todolists: TodolistType[]) => (
         }
     } as const
 )
-
-
-export const fetchTodolistsTC = () => (dispatch: Dispatch) => {
+//thunks
+export const fetchTodolistsTC = () => (dispatch: Dispatch<SetTodolistsACType>) => {
     TodolistApi.getTodolists()
         .then(data => {
             dispatch(setTodolistsAC(data))
         })
 }
-export const removeTodolistTC = (todolistID: string) => (dispatch: Dispatch) => {
+export const removeTodolistTC = (todolistID: string) => (dispatch: Dispatch<RemoveTodolistACType>) => {
     TodolistApi.deleteTodolist(todolistID)
         .then(() => {
             dispatch(removeTodolistAC(todolistID))
         })
 }
-export const createTodolistTC = (title: string) => (dispatch: Dispatch) => {
+export const addTodolistTC = (title: string) => (dispatch: Dispatch<AddTodolistACType>) => {
     TodolistApi.createTodolist(title)
         .then(res => {
             dispatch(addTodolistAC(res.data.data.item))
         })
 }
-export const changeTodolisTitletTC = (todolistID: string, title: string) => (dispatch: Dispatch) => {
+export const changeTodolisTitletTC = (todolistID: string, title: string) => (dispatch: Dispatch<ReturnType<typeof changeTodolisTitletAC>>) => {
     TodolistApi.changeTodolistTitle(todolistID, title)
         .then(res => {
             console.log(res.data);
@@ -85,3 +77,13 @@ export const changeTodolisTitletTC = (todolistID: string, title: string) => (dis
 
         })
 }
+//types
+export type RemoveTodolistACType = ReturnType<typeof removeTodolistAC>
+export type AddTodolistACType = ReturnType<typeof addTodolistAC>
+export type SetTodolistsACType = ReturnType<typeof setTodolistsAC>
+type ActionType =
+    | RemoveTodolistACType
+    | AddTodolistACType
+    | SetTodolistsACType
+    | ReturnType<typeof changeTodolisTitletAC>
+    | ReturnType<typeof changeTodolisFilterAC>

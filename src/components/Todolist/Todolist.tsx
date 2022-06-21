@@ -10,6 +10,7 @@ import { TodolistFilterType } from "../../types/todolistsTypes"
 import { useDispatch } from "react-redux"
 import { fetchTasksTC } from "../../reducers/tasksReducer/tasksReducer"
 
+
 type TodolistPropstType = {
     deleteTasks: (todolistID: string, taskId: string) => void
     addTask: (todolistId: string, title: string) => void
@@ -28,7 +29,6 @@ export const Todolist = React.memo(({ title, tasks, removeTodolist, addTask, ...
     useEffect(() => {
         dispatch(fetchTasksTC(props.todolistID))
     }, [])
-
 
     const filteredTasks = (filter: TodolistFilterType) => {
         switch (filter) {

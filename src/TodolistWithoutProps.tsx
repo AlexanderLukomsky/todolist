@@ -4,7 +4,7 @@ import { EditableSpan } from "./components/EditebleSpan/EditebleSpan"
 import { changeTodolisFilterAC, changeTodolisTitletAC, removeTodolistAC } from "./reducers/todolistReducer/todolist-reducer"
 import style from './components/Todolist/Todolist.module.scss'
 import { useDispatch } from "react-redux"
-import { addTaskAC, createTaskTC, removeTaskAC, updateTaskAC } from "./reducers/tasksReducer/tasksReducer"
+import { addTaskAC, addTaskTC, removeTaskAC, updateTaskAC } from "./reducers/tasksReducer/tasksReducer"
 import { TaskStatuses } from "./types/tasksTypes"
 import { TodolistFilterType, TodolistWithFilterType } from "./types/todolistsTypes"
 
@@ -32,7 +32,7 @@ const TodolistWithoutProps = (props: TodolistPropstType) => {
     }
     const removeTask = (todolistId: string, taskID: string) => { dispatch(removeTaskAC(todolistId, taskID)) }
     const addTaskHandler = (title: string) => {
-        dispatch(createTaskTC(props.todolist.id, title))
+        dispatch(addTaskTC(props.todolist.id, title))
     }
     const editTaskTitleHandler = (todolistID: string, taskID: string, title: string) => {
         dispatch(updateTaskAC(todolistID, taskID, { title }))

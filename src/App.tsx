@@ -9,6 +9,9 @@ import { addTaskAC, removeTaskAC, tasksReducer, updateTaskAC } from './reducers/
 import { TaskPriorities, TaskStatuses } from './types/tasksTypes';
 import { TodolistFilterType } from './types/todolistsTypes';
 
+
+//test commit
+
 const App = () => {
     const todoListID1 = v1()
     const todoListID2 = v1()
